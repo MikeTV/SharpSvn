@@ -10,7 +10,7 @@
     <!-- Somehow these aren't initialized correctly in VS2010. They should be loaded based on the ToolsVersion -->
     <SDK35ToolsPath Condition="'$(SDK35ToolsPath)'==''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A\WinSDK-NetFx35Tools-x86@InstallationFolder)</SDK35ToolsPath>
     <SDK40ToolsPath Condition="'$(SDK40ToolsPath)'==''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A\WinSDK-NetFx40Tools-x86@InstallationFolder)</SDK40ToolsPath>
-    <NetFxSdk48Dir Condition="'$(NetFxSdk48Dir)'==''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\NETFXSDK\4.8@KitsInstallationFolder)</NetFxSdk48Dir>
+    <NetFxSdkDir Condition="'$(NetFxSdkDir)'==''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\NETFXSDK\4.8.1@KitsInstallationFolder)</NetFxSdkDir>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="DebugCore|ARM64">
@@ -75,7 +75,7 @@
     </SccProvider>
     <Keyword>ManagedCProj</Keyword>
     <SharpSvnUpdateVersionResource>true</SharpSvnUpdateVersionResource>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -511,7 +511,7 @@ $(SolutionDir)tools\Errors2Enum\bin\Debug\Errors2Enum.exe "$(VCInstallDir)." "$(
     </PreLinkEvent>
     <Link>
       <AdditionalDependencies>Advapi32.lib;shell32.lib;Rpcrt4.lib;Mswsock.lib;Crypt32.lib;User32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(NetFxSdk48Dir)Lib\um\arm;..\..\imports\release\lib-ARM64;..\..\imports\release\lib-AnyCPU;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(NetFxSdkDir)Lib\um\arm64;..\..\imports\release\lib-ARM64;..\..\imports\release\lib-AnyCPU;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>SharpSvn-DB44-20-$(Platform).svnDll;advapi32.dll;crypt32.dll;rpcrt4.dll;secur32.dll;user32.dll;version.dll;ws2_32.dll;shell32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
       <AssemblyLinkResource>$(TargetDir)SharpPlink-$(Platform).svnExe;%(AssemblyLinkResource)</AssemblyLinkResource>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -549,7 +549,7 @@ $(SolutionDir)tools\Errors2Enum\bin\Debug\Errors2Enum.exe "$(VCInstallDir)." "$(
     </PreLinkEvent>
     <Link>
       <AdditionalDependencies>Advapi32.lib;shell32.lib;Rpcrt4.lib;Mswsock.lib;Crypt32.lib;User32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(NetFxSdk48Dir)Lib\um\arm;..\..\imports\release\lib-ARM64;..\..\imports\release\lib-AnyCPU;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(NetFxSdkDir)Lib\um\arm64;..\..\imports\release\lib-ARM64;..\..\imports\release\lib-AnyCPU;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>SharpSvn-DB44-20-$(Platform).svnDll;advapi32.dll;crypt32.dll;rpcrt4.dll;secur32.dll;user32.dll;version.dll;ws2_32.dll;shell32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>true</AssemblyDebug>

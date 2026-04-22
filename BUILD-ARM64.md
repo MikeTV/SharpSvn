@@ -1,201 +1,119 @@
-# SharpSvn ARM64 Build Plan (.NET Framework + .NET Core)
+# SharpSvn ARM64 Build Status
 
-Pick-up guide for finishing the ARM64 build work and producing working
-`SharpSvn.dll` binaries for `Release|ARM64` (targets .NET Framework 4.8.1) and
-`ReleaseCore|ARM64` (targets .NET 6+).
+This repository now has a working ARM64 `.NET Framework 4.8.1` build and a
+working ARM64 `.NET 6` build on Windows with Visual Studio 2026.
 
-## Current State (confirmed)
+## Verified Outputs
 
-- `src/SharpSvn.sln` and `src/SharpSvn/SharpSvn.vcxproj` already declare all
-  four ARM64 configurations (`Debug`, `DebugCore`, `Release`, `ReleaseCore`).
-- Linker `TargetMachine` is `MachineARM64` for every ARM64 config.
-- Additional library path `..\..\imports\release\lib-ARM64` is wired in.
-- `.github/workflows/MSBuild.yml` has `build-arm64` and `build-arm64-core`
-  jobs; `create-nuget` depends on them.
-- `imports/Default.build` already accepts `platform=ARM64`.
-- `SharpPlink.vcxproj` has `Debug|ARM64` and `Release|ARM64` project
-  configurations declared.
+- Framework build:
+  - `src\SharpSvn\bin\ARM64\Release\SharpSvn.dll`
+  - `src\SharpSvn\bin\ARM64\Release\SharpPlink-ARM64.svnExe`
+- Core build:
+  - `src\SharpSvn\bin\ARM64\ReleaseCore\SharpSvn.dll`
+  - `src\SharpSvn\bin\ARM64\ReleaseCore\SharpPlink-ARM64.svnExe`
 
-## Blockers (in order)
+The framework DLL was verified after build, and the resulting file is an ARM64
+mixed-mode assembly.
 
-1. **VS 2026 install is missing the ARM64 MSVC toolset.**
-   There is no `VC/Tools/MSVC/<ver>/bin/Hostx64/arm64/cl.exe`, only
-   `Hostx64/x64` and `Hostx64/x86`. MSBuild therefore can't cross-compile to
-   ARM64 and may also fall through to `v120` (the older SharpPlink conditional
-   block), producing `MSB8020: Visual Studio 2013 (v120) build tools cannot be
-   found`.
+## Required Installed Components
 
-2. **Native dependencies not built for ARM64.**
-   `imports/release/` is empty. SharpSvn links against a large static chain
-   (APR, APR-util, Subversion, serf, OpenSSL, SQLite, zlib, expat, SASL,
-   libssh2, etc.) that must be pre-produced into `imports/release/lib-ARM64`.
+The following tooling is installed on the machine used to verify the build:
 
-3. **Dependency-build tools not on PATH.** NAnt, CMake, SCons, NASM, NuGet
-   are all needed for the NAnt-driven dep build (`tools/buildbot.build`).
-   Perl and Python3 are present.
+- Visual Studio 2026 Community with ARM64 MSVC tools
+- .NET Framework 4.8.1 Developer Pack
+- CMake
+- NASM
+- NuGet
+- Strawberry Perl
+- Python 3.12
+- `scons`
+- SlikSVN
+- NAnt 0.92 under `imports\NAnt.0.92.0`
+- Local `.NET 6` SDK under `C:\Repos\sharpsvn\.dotnet6`
 
-## Step-by-Step Plan
+The critical SDK paths added by the 4.8.1 developer pack are:
 
-All commands assume repo root =
-`c:\Users\erela\source\repos\VersionSQL-Dependencies-WIP\SharpSvn-main` and an
-elevated Developer PowerShell or `cmd` unless noted. Use **bash** for
-anything that just needs a shell; use **Developer Command Prompt for VS 2026**
-for MSBuild/NAnt native-dep steps.
+- `C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8.1`
+- `C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\Lib\um\arm64\mscoree.lib`
 
-### Step 1 — Add the ARM64 VC++ toolset to VS 2026
+## Repository State
 
-Required component IDs (add all three):
+The ARM64 bring-up now includes:
 
-- `Microsoft.VisualStudio.Component.VC.Tools.ARM64` — MSVC v145 ARM64 build tools
-- `Microsoft.VisualStudio.Component.VC.Tools.ARM64EC` — ARM64EC (optional but cheap)
-- `Microsoft.VisualStudio.Component.Windows11SDK.26100` — Win11 SDK ARM64 libs
-  (or whichever SDK version is already installed — match it)
+- ARM64 native dependency generation into `imports\release\lib-ARM64`
+- Visual Studio 2026 support in the native dependency scripts
+- ARM64 CI jobs and ARM64 package assets
+- `SharpSvn.vcxproj` targeting `.NET Framework 4.8.1`
+- ARM64 framework linking against `NETFXSDK\4.8.1\Lib\um\arm64`
+- NuGet package metadata updated from `net46` to `net481`
 
-Run from an elevated cmd:
+## Working Commands
 
-```cmd
-"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vs_installer.exe" modify ^
-  --installPath "C:\Program Files\Microsoft Visual Studio\18\Community" ^
-  --add Microsoft.VisualStudio.Component.VC.Tools.ARM64 ^
-  --add Microsoft.VisualStudio.Component.VC.Tools.ARM64EC ^
-  --add Microsoft.VisualStudio.Component.Windows11SDK.26100 ^
-  --quiet --norestart
-```
+### 1. Build ARM64 native dependencies
 
-Verify afterward:
-
-```bash
-ls "/c/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.50.35717/bin/Hostx64/arm64/cl.exe"
-```
-
-The file must exist.
-
-### Step 2 — Install dep-build tools
-
-```powershell
-winget install --id Kitware.CMake         -e --accept-package-agreements --accept-source-agreements
-winget install --id NASM.NASM             -e --accept-package-agreements --accept-source-agreements
-winget install --id Microsoft.NuGet       -e --accept-package-agreements --accept-source-agreements
-# SCons via Python
-pip install scons
-```
-
-NAnt 0.92 is installed into the repo itself (the CI does this too):
+Run from the repo root in `cmd.exe`:
 
 ```cmd
-cd imports
-nuget.exe install NAnt -Version 0.92
+call "C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64_arm64
+imports\NAnt.0.92.0\tools\NAnt.exe -f:tools\buildbot.build buildbot-build -D:platform=ARM64
 ```
 
-That drops `NAnt.0.92.0` under `imports/` and the exe lands at
-`imports/NAnt.0.92.0/bin/NAnt.exe`.
+Success looks like populated libraries under:
 
-Add to PATH for the session (bash):
-
-```bash
-export PATH="$PATH:/c/Program Files/CMake/bin:/c/Program Files/NASM:/c/Users/$USER/.local/bin"
+```text
+imports\release\lib-ARM64
 ```
 
-Verify tools resolve:
-
-```bash
-which cmake nasm nuget perl python scons
-ls imports/NAnt.0.92.0/bin/NAnt.exe
-```
-
-### Step 3 — Build native dependencies for ARM64
-
-The dep build needs the VS ARM64 cross environment loaded. From a regular
-`cmd`:
+### 2. Restore NuGet packages
 
 ```cmd
-"C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64_arm64
-cd c:\Users\erela\source\repos\VersionSQL-Dependencies-WIP\SharpSvn-main
-imports\NAnt.0.92.0\bin\NAnt.exe -f:tools\buildbot.build buildbot-build -D:platform=ARM64
+"C:\Users\ava\AppData\Local\Microsoft\WinGet\Packages\Microsoft.NuGet_Microsoft.Winget.Source_8wekyb3d8bbwe\nuget.exe" restore src\SharpSvn.sln
 ```
 
-This matches the CI step in [.github/workflows/MSBuild.yml](.github/workflows/MSBuild.yml)
-line 51. Expect 10–30 minutes, and some non-fatal warnings.
+### 3. Build `.NET Framework 4.8.1` ARM64
 
-Success check: `imports/release/lib-ARM64/` exists and contains `.lib` files
-(subversion, apr, serf, openssl, sqlite, etc.). Also:
-`imports/release/lib-AnyCPU/` populated.
-
-> **If the dep build fails on a specific package**, check
-> `imports/patches/<pkg>/` — patches may need to be refreshed for ARM64.
-> The in-tree `subversionMerges="1890223,1890668,1890673"` in
-> `imports/Default.build` already pulls the upstream Subversion ARM64
-> patches, so svn itself should build cleanly.
-
-### Step 4 — Restore NuGet packages for SharpSvn.sln
-
-```bash
-nuget.exe restore src/SharpSvn.sln
-```
-
-### Step 5 — Build SharpSvn for ARM64
-
-.NET Framework 4.8.1 ARM64:
+Use the verified helper script in the repo root:
 
 ```cmd
-msbuild.exe /r /v:m /p:Platform=ARM64 /p:Configuration=Release src\SharpSvn.sln /p:BuildBotBuild=true
+cmd.exe /c _codex_arm64_build.cmd
 ```
 
-.NET Core/6+ ARM64:
+That script:
+
+- loads `vcvarsall.bat x64_arm64`
+- sets `TargetFrameworkRootPath=C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework`
+- prepends `C:\Program Files (x86)\Windows Kits\NETFXSDK\4.8.1\Lib\um\arm64` to `LIB`
+- restores NuGet packages
+- builds `src\SharpSvn.sln` with:
+  - `Configuration=Release`
+  - `Platform=ARM64`
+  - `BuildBotBuild=true`
+
+### 4. Build `.NET 6` ARM64
+
+Use the separate helper script:
 
 ```cmd
-msbuild.exe /r /v:m /p:Platform=ARM64 /p:Configuration=ReleaseCore src\SharpSvn.sln /p:BuildBotBuild=true
+cmd.exe /c _codex_arm64_releasecore.cmd
 ```
 
-Success check:
+That script additionally sets:
 
-- `src/SharpSvn/bin/ARM64/Release/SharpSvn.dll`
-- `src/SharpSvn/bin/ARM64/ReleaseCore/SharpSvn.dll`
-- `src/SharpPlink/bin/ARM64/Release/SharpPlink.exe`
+- `DOTNET_ROOT=C:\Repos\sharpsvn\.dotnet6`
 
-If you hit `MSB8020: v120` again on SharpPlink, the VS 2026 ARM64 toolset
-install didn't populate `DefaultPlatformToolset`. Workaround: pass
-`/p:PlatformToolset=v145` on the MSBuild line. A cleaner fix is to edit
-[src/SharpPlink/SharpPlink.vcxproj:60-81](src/SharpPlink/SharpPlink.vcxproj#L60-L81)
-— the `Release|x64` and `Release|ARM64` blocks have a stale unconditional
-`<PlatformToolset Condition="'$(VCTargetsPath11)' != ''">v120</PlatformToolset>`
-ahead of the modern guard; reorder so the `DefaultPlatformToolset` line comes
-first, or simply delete the two legacy fallback lines.
+and builds:
 
-### Step 6 — Smoke-test the ARM64 DLL
-
-On an ARM64 Windows device (or Windows 11 ARM VM):
-
-```powershell
-Add-Type -Path 'src\SharpSvn\bin\ARM64\Release\SharpSvn.dll'
-$c = [SharpSvn.SvnClient]::new()
-$c.GetVersion()
+```text
+src\SharpSvn\SharpSvn.vcxproj
 ```
 
-Should print the Subversion client version with no `BadImageFormatException`.
-If run from x64 it *will* throw — that's expected, confirming it's a real
-ARM64 binary.
+with `Configuration=ReleaseCore` and `Platform=ARM64`.
 
-## Short Version for Another Env
+## Notes
 
-1. VS 2026 (or 2022) with components:
-   `VC.Tools.ARM64`, `VC.Tools.ARM64EC`, matching Windows SDK.
-2. `winget install` CMake, NASM, NuGet; `pip install scons`.
-3. `cd imports && nuget install NAnt -Version 0.92`.
-4. Dev CMD → `vcvarsall.bat x64_arm64` →
-   `imports\NAnt.0.92.0\bin\NAnt.exe -f:tools\buildbot.build buildbot-build -D:platform=ARM64`.
-5. `nuget restore src\SharpSvn.sln`.
-6. `msbuild /r /p:Platform=ARM64 /p:Configuration=Release src\SharpSvn.sln`
-   (and repeat with `ReleaseCore`).
-
-## Known Open Items
-
-- `SharpPlink.vcxproj` PlatformToolset ordering bug (see Step 5 note).
-- `test-arm64-core` job in CI is commented out because GitHub's
-  `windows-11-arm` runner is still preview; once stable, uncomment it
-  (MSBuild.yml:417-437).
-- `imports/msm/` only has `Microsoft_VC143_CRT_x86.msm` and `x64.msm` —
-  when producing the MSI/MSM installer story, an ARM64 MSM may also be
-  needed (`Microsoft_VC143_CRT_arm64.msm`).
-- WSL is **not** a viable build host for this project; C++/CLI is
-  Windows-only by design.
+- The 4.8.1 build only started linking successfully after the official
+  `.NET Framework 4.8.1 Developer Pack` was installed.
+- Before that install, the machine had no ARM64 `MSCOREE.lib`, which blocked
+  the framework ARM64 link step.
+- The framework package metadata now uses `net481`, which matches the actual
+  target framework of the built assembly.

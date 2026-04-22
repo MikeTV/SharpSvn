@@ -14,13 +14,13 @@
     <tags>Subversion Svn SharpSvn</tags>
     <repository type="git" url="https://github.com/AmpScm/SharpSvn.git" branch="main" commit="" />
     <dependencies>
-      <group targetFramework="net46">
+      <group targetFramework="net481">
       </group>
       <group targetFramework="netcoreapp">
       </group>
     </dependencies>
     <references>
-      <group targetFramework="net46">
+      <group targetFramework="net481">
         <reference file="SharpSvn.dll" />
         <reference file="SharpSvn.xml" />
       </group>
@@ -32,35 +32,35 @@
   </metadata>
   <files>
     <!-- For legacy NuGet -->
-    <file target="lib/net46" src="../src/SharpSvn/bin/win32/release/SharpSvn.dll" />
-    <file target="lib/net46" src="../src/SharpSvn/bin/win32/release/SharpSvn.xml" />
-    <file target="lib/net46" src="../src/SharpSvn/bin/win32/release/SharpPlink-Win32.svnExe" />
-    <file target="lib/net46" src="../imports/release/bin/SharpSvn-DB44-20-win32.svnDll" />
+    <file target="lib/net481" src="../src/SharpSvn/bin/win32/release/SharpSvn.dll" />
+    <file target="lib/net481" src="../src/SharpSvn/bin/win32/release/SharpSvn.xml" />
+    <file target="lib/net481" src="../src/SharpSvn/bin/win32/release/SharpPlink-Win32.svnExe" />
+    <file target="lib/net481" src="../imports/release/bin/SharpSvn-DB44-20-win32.svnDll" />
     <!-- /legacy -->
 
     <!-- For PackageReference NuGet on .Net 4.x -->
     <!--  For compile time -->
-    <file target="ref/net46" src="obj/SharpSvn.dll" />
-    <file target="ref/net46" src="../src/SharpSvn/bin/win32/release/SharpSvn.xml" />
+    <file target="ref/net481" src="obj/SharpSvn.dll" />
+    <file target="ref/net481" src="../src/SharpSvn/bin/win32/release/SharpSvn.xml" />
 
     <!-- For runtime -->
-    <file target="runtimes/win-x86/lib/net46" src="../src/SharpSvn/bin/win32/release/SharpSvn.dll" />
-    <file target="runtimes/win-x86/lib/net46" src="../src/SharpSvn/bin/win32/release/SharpSvn.pdb" />
-    <file target="runtimes/win-x86/lib/net46" src="../src/SharpSvn/bin/win32/release/SharpSvn.xml" />
-    <file target="runtimes/win-x86/lib/net46" src="../src/SharpSvn/bin/win32/release/SharpPlink-Win32.svnExe" />
-    <file target="runtimes/win-x86/lib/net46" src="../imports/release/bin/SharpSvn-DB44-20-win32.svnDll" />
+    <file target="runtimes/win-x86/lib/net481" src="../src/SharpSvn/bin/win32/release/SharpSvn.dll" />
+    <file target="runtimes/win-x86/lib/net481" src="../src/SharpSvn/bin/win32/release/SharpSvn.pdb" />
+    <file target="runtimes/win-x86/lib/net481" src="../src/SharpSvn/bin/win32/release/SharpSvn.xml" />
+    <file target="runtimes/win-x86/lib/net481" src="../src/SharpSvn/bin/win32/release/SharpPlink-Win32.svnExe" />
+    <file target="runtimes/win-x86/lib/net481" src="../imports/release/bin/SharpSvn-DB44-20-win32.svnDll" />
 
-    <file target="runtimes/win-x64/lib/net46" src="../src/SharpSvn/bin/x64/release/SharpSvn.dll" />
-    <file target="runtimes/win-x64/lib/net46" src="../src/SharpSvn/bin/x64/release/SharpSvn.pdb" />
-    <file target="runtimes/win-x64/lib/net46" src="../src/SharpSvn/bin/x64/release/SharpSvn.xml" />
-    <file target="runtimes/win-x64/lib/net46" src="../src/SharpSvn/bin/x64/release/SharpPlink-x64.svnExe" />
-    <file target="runtimes/win-x64/lib/net46" src="../imports/release/bin/SharpSvn-DB44-20-x64.svnDll" />
+    <file target="runtimes/win-x64/lib/net481" src="../src/SharpSvn/bin/x64/release/SharpSvn.dll" />
+    <file target="runtimes/win-x64/lib/net481" src="../src/SharpSvn/bin/x64/release/SharpSvn.pdb" />
+    <file target="runtimes/win-x64/lib/net481" src="../src/SharpSvn/bin/x64/release/SharpSvn.xml" />
+    <file target="runtimes/win-x64/lib/net481" src="../src/SharpSvn/bin/x64/release/SharpPlink-x64.svnExe" />
+    <file target="runtimes/win-x64/lib/net481" src="../imports/release/bin/SharpSvn-DB44-20-x64.svnDll" />
 
-    <file target="runtimes/win-arm64/lib/net46" src="../src/SharpSvn/bin/arm64/release/SharpSvn.dll" />
-    <file target="runtimes/win-arm64/lib/net46" src="../src/SharpSvn/bin/arm64/release/SharpSvn.pdb" />
-    <file target="runtimes/win-arm64/lib/net46" src="../src/SharpSvn/bin/arm64/release/SharpSvn.xml" />
-    <file target="runtimes/win-arm64/lib/net46" src="../src/SharpSvn/bin/arm64/release/SharpPlink-ARM64.svnExe" />
-    <file target="runtimes/win-arm64/lib/net46" src="../imports/release/bin/SharpSvn-DB44-20-ARM64.svnDll" />
+    <file target="runtimes/win-arm64/lib/net481" src="../src/SharpSvn/bin/arm64/release/SharpSvn.dll" />
+    <file target="runtimes/win-arm64/lib/net481" src="../src/SharpSvn/bin/arm64/release/SharpSvn.pdb" />
+    <file target="runtimes/win-arm64/lib/net481" src="../src/SharpSvn/bin/arm64/release/SharpSvn.xml" />
+    <file target="runtimes/win-arm64/lib/net481" src="../src/SharpSvn/bin/arm64/release/SharpPlink-ARM64.svnExe" />
+    <file target="runtimes/win-arm64/lib/net481" src="../imports/release/bin/SharpSvn-DB44-20-ARM64.svnDll" />
     <!-- /PackageReference -->
 
     <!-- And for .Net Core -->
