@@ -1,0 +1,9 @@
+SharpSvn
+Copyright 2007-2025 The SharpSvn Project
+
+This fork includes modifications by Wrism Innovations in 2026.
+Those modifications add Windows ARM64 and .NET Framework 4.8.1 support,
+including build, packaging, CI, and consumer runtime assets.
+
+Modified source files in this derivative work carry notices stating that
+they were changed.

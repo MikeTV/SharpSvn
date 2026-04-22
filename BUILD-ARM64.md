@@ -1,5 +1,7 @@
 # SharpSvn ARM64 Build Status
 
+Modified by Wrism Innovations in 2026 to add Windows ARM64 and .NET Framework 4.8.1 support.
+
 This repository now has a working ARM64 `.NET Framework 4.8.1` build and a
 working ARM64 `.NET 6` build on Windows with Visual Studio 2026.
 

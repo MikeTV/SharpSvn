@@ -1,4 +1,5 @@
 <?xml version="1.0" ?>
+<!-- Modified by Wrism Innovations in 2026 to add Windows ARM64 and .NET Framework 4.8.1 support. -->
 <project basedir=".." default="build">
   <property name="nghttp2Dir" value="${platformRoot}/nghttp2" />
 

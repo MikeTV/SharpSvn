@@ -1,4 +1,5 @@
 @echo off
+REM Modified by Wrism Innovations in 2026 to add Windows ARM64 and .NET Framework 4.8.1 support.
 setlocal
 
 call "C:\Program Files\Microsoft Visual Studio\18\Community\VC\Auxiliary\Build\vcvarsall.bat" x64_arm64

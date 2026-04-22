@@ -1,5 +1,7 @@
 # SharpSvn Consumer Files for .NET Framework 4.8.1 on Windows ARM64
 
+Modified by Wrism Innovations in 2026 to add Windows ARM64 and .NET Framework 4.8.1 support.
+
 This folder contains a prebuilt SharpSvn runtime set for applications that
 target `.NET Framework 4.8.1` on `Windows ARM64`.
 

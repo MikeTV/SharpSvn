@@ -1,3 +1,4 @@
+<!-- Modified by Wrism Innovations in 2026 to add Windows ARM64 and .NET Framework 4.8.1 support. -->
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>SharpSvn</id>
