@@ -40,6 +40,37 @@
         return auth_baton->creds_cache;
         }
       </echo>
+      <FilterFile file="${svnBase}/subversion/libsvn_subr/auth.c" if="${svnAddSharpSvn and applyMerges}">
+        <filterchain>
+          <replacestring from='        /* Appended by sharpsvn/imports/scripts/build-subversion.build */
+        apr_hash_t* sharpsvn_svn_auth_get_credentials_cache(svn_auth_baton_t *auth_baton)
+        {
+        if (!auth_baton)
+        return NULL;
+
+        return auth_baton->creds_cache;
+        }
+      
+        /* Appended by sharpsvn/imports/scripts/build-subversion.build */
+        apr_hash_t* sharpsvn_svn_auth_get_credentials_cache(svn_auth_baton_t *auth_baton)
+        {
+        if (!auth_baton)
+        return NULL;
+
+        return auth_baton->creds_cache;
+        }
+      '
+                         to='        /* Appended by sharpsvn/imports/scripts/build-subversion.build */
+        apr_hash_t* sharpsvn_svn_auth_get_credentials_cache(svn_auth_baton_t *auth_baton)
+        {
+        if (!auth_baton)
+        return NULL;
+
+        return auth_baton->creds_cache;
+        }
+      ' />
+        </filterchain>
+      </FilterFile>
 
       <FilterFile file="${svnBase}/subversion/libsvn_fs_base/fs.c" if="${svnAddSharpSvn and applyMerges}">
         <filterchain>
@@ -69,6 +100,27 @@
                          to='[if-any depends.delayload]${dllPrefix}[depends.delayload];[end]' />
         </filterchain>
       </FilterFile>
+      <FilterFile file="${svnBase}\build\generator\templates\vcnet_vcxproj.ezt">
+        <filterchain>
+          <replacestring from='    &lt;PlatformToolset&gt;[toolset_version]&lt;/PlatformToolset&gt;'
+                         to='    &lt;PlatformToolset Condition="$(DefaultPlatformToolset) != &apos;&apos;"&gt;$(DefaultPlatformToolset)&lt;/PlatformToolset&gt;
+    &lt;PlatformToolset Condition="$(DefaultPlatformToolset) == &apos;&apos;"&gt;[toolset_version]&lt;/PlatformToolset&gt;' />
+        </filterchain>
+      </FilterFile>
+      <FilterFile file="${svnBase}\build\generator\templates\svn_locale.vcxproj.ezt">
+        <filterchain>
+          <replacestring from='    &lt;PlatformToolset&gt;[toolset_version]&lt;/PlatformToolset&gt;'
+                         to='    &lt;PlatformToolset Condition="$(DefaultPlatformToolset) != &apos;&apos;"&gt;$(DefaultPlatformToolset)&lt;/PlatformToolset&gt;
+    &lt;PlatformToolset Condition="$(DefaultPlatformToolset) == &apos;&apos;"&gt;[toolset_version]&lt;/PlatformToolset&gt;' />
+        </filterchain>
+      </FilterFile>
+      <FilterFile file="${svnBase}\build\generator\templates\svn_config.vcxproj.ezt">
+        <filterchain>
+          <replacestring from='    &lt;PlatformToolset&gt;[toolset_version]&lt;/PlatformToolset&gt;'
+                         to='    &lt;PlatformToolset Condition="$(DefaultPlatformToolset) != &apos;&apos;"&gt;$(DefaultPlatformToolset)&lt;/PlatformToolset&gt;
+    &lt;PlatformToolset Condition="$(DefaultPlatformToolset) == &apos;&apos;"&gt;[toolset_version]&lt;/PlatformToolset&gt;' />
+        </filterchain>
+      </FilterFile>
       <!-- EXPAT inserted a new space between # and define-->
       <FilterFile file="${svnBase}\build\generator\gen_win_dependencies.py" >
         <filterchain>
@@ -78,6 +130,10 @@
                          to="vermatch = re.search(r'^\s*#\s*define\s+XML_MINOR_VERSION\s+(\d+)', txt, re.M)" />
           <replacestring from="vermatch = re.search(r'^\s*#define\s+XML_MICRO_VERSION\s+(\d+)', txt, re.M)"
                          to="vermatch = re.search(r'^\s*#\s*define\s+XML_MICRO_VERSION\s+(\d+)', txt, re.M)" />
+          <replacestring from="          self.vcproj_version = '14.3'"
+                         to="          self.vcproj_version = '14.3'
+          if os.environ.get('VisualStudioVersion') == '18.0':
+            self.vcproj_version = '14.5'" />
         </filterchain>
       </FilterFile>
     </OnceBlock>

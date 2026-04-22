@@ -92,7 +92,7 @@
           <replacestring from='&gt;libapr-1&lt;/TargetName' to='&gt;${dllPrefix}libapr-1&lt;/TargetName' if="${vcxproj}" />
         </filterchain>
       </FilterFile>
-      <MSBuild src="${aprDir}/APR.sln">
+      <MSBuild src="${aprDir}/APR.${cmakeSolutionExt}">
         <target value="apr-1" />
         <target value="libapr-1" />
       </MSBuild>

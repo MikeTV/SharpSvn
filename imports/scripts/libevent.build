@@ -15,7 +15,7 @@
         <filterchain refid="cmake-lib" />
       </FilterFile>
 
-      <MSBuild src="${libeventDir}/libevent.sln">
+      <MSBuild src="${libeventDir}/libevent.${cmakeSolutionExt}">
         <!--target value="apr-1" />
         <target value="libapr-1" /-->
       </MSBuild>

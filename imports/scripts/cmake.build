@@ -11,8 +11,16 @@
   <property name="cmakeGenerator" value="Visual Studio 15 2017" overwrite="false" if="${VSversion == '2017'}" />
   <property name="cmakeGenerator" value="Visual Studio 16 2019" overwrite="false" if="${VSversion == '2019'}" />
   <property name="cmakeGenerator" value="Visual Studio 17 2022" overwrite="false" if="${VSversion == '2022'}" />
+  <property name="cmakeGenerator" value="Visual Studio 18 2026" overwrite="true"
+            if="${environment::variable-exists('VisualStudioVersion') and ('18.0' == environment::get-variable('VisualStudioVersion'))}" />
+  <property name="cmakeGenerator" value="Visual Studio 18 2026" overwrite="true"
+            if="${environment::variable-exists('VCINSTALLDIR') and string::contains(environment::get-variable('VCINSTALLDIR'), 'Visual Studio\18\')}" />
 
   <property name="cmakePlatform" value="${platform}" />
+  <property name="cmakePolicyVersionMinimum" value="3.5" overwrite="false" />
+  <property name="cmakeSolutionExt" value="sln" overwrite="false" />
+  <property name="cmakeSolutionExt" value="slnx" overwrite="true"
+            if="${cmakeGenerator == 'Visual Studio 18 2026'}" />
 
   <filterchain id="cmake-lib">
     <!-- DebugInformationFormat is only empty for release mode -->
@@ -43,6 +51,11 @@
                          &lt;Lib&gt;
                            &lt;TargetMachine&gt;MachineX86&lt;/TargetMachine&gt;
                          &lt;/Lib&gt;' if="${vcxproj and platform=='x86'}" />
+    <replacestring from='&lt;/Midl&gt;'
+                     to='&lt;/Midl&gt;
+                         &lt;Lib&gt;
+                           &lt;TargetMachine&gt;MachineARM64&lt;/TargetMachine&gt;
+                         &lt;/Lib&gt;' if="${vcxproj and platform=='ARM64'}" />
   </filterchain>
 
   <filterchain id="cmake-link">

@@ -99,7 +99,7 @@
         </filterchain>
       </FilterFile>
 
-      <MSBuild src="${aprUtilDir}/APR-Util.sln">
+      <MSBuild src="${aprUtilDir}/APR-Util.${cmakeSolutionExt}">
         <target value="aprutil-1" />
         <target value="libaprutil-1" />
         <target value="apr_crypto_openssl-1" if="${enableAprCrypto}" />

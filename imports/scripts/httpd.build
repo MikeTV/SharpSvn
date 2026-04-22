@@ -50,7 +50,7 @@
       </foreach>
 
       <!-- And now build the binaries for the intended target -->
-      <MSBuild src="${httpdDir}/HTTPD.sln">
+      <MSBuild src="${httpdDir}/HTTPD.${cmakeSolutionExt}">
         <target value="httpd" />
         <target value="htpasswd" />
         <target value="mod_dav" />

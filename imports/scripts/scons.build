@@ -27,6 +27,15 @@
         </filterchain>
       </FilterFile>
     </if>
+    <if test="${string::contains(VCINSTALLDIR, 'Visual Studio\18\')}">
+      <FilterFile file="${sconsDir}\scons-local-${sconsVersion}\SCons\Tool\MSCommon\vc.py">
+        <filterchain>
+          <replacestring from="('17', '14.3', None),"
+                         to="('18', '14.3', None),
+    ('17', '14.3', None)," />
+        </filterchain>
+      </FilterFile>
+    </if>
   </target>
 
 </project>

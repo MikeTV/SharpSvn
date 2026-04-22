@@ -10,6 +10,7 @@
     <!-- Somehow these aren't initialized correctly in VS2010. They should be loaded based on the ToolsVersion -->
     <SDK35ToolsPath Condition="'$(SDK35ToolsPath)'==''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A\WinSDK-NetFx35Tools-x86@InstallationFolder)</SDK35ToolsPath>
     <SDK40ToolsPath Condition="'$(SDK40ToolsPath)'==''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v7.0A\WinSDK-NetFx40Tools-x86@InstallationFolder)</SDK40ToolsPath>
+    <NetFxSdk48Dir Condition="'$(NetFxSdk48Dir)'==''">$(Registry:HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Microsoft SDKs\NETFXSDK\4.8@KitsInstallationFolder)</NetFxSdk48Dir>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="DebugCore|ARM64">
@@ -510,7 +511,7 @@ $(SolutionDir)tools\Errors2Enum\bin\Debug\Errors2Enum.exe "$(VCInstallDir)." "$(
     </PreLinkEvent>
     <Link>
       <AdditionalDependencies>Advapi32.lib;shell32.lib;Rpcrt4.lib;Mswsock.lib;Crypt32.lib;User32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\imports\release\lib-ARM64;..\..\imports\release\lib-AnyCPU;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(NetFxSdk48Dir)Lib\um\arm;..\..\imports\release\lib-ARM64;..\..\imports\release\lib-AnyCPU;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>SharpSvn-DB44-20-$(Platform).svnDll;advapi32.dll;crypt32.dll;rpcrt4.dll;secur32.dll;user32.dll;version.dll;ws2_32.dll;shell32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
       <AssemblyLinkResource>$(TargetDir)SharpPlink-$(Platform).svnExe;%(AssemblyLinkResource)</AssemblyLinkResource>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -548,7 +549,7 @@ $(SolutionDir)tools\Errors2Enum\bin\Debug\Errors2Enum.exe "$(VCInstallDir)." "$(
     </PreLinkEvent>
     <Link>
       <AdditionalDependencies>Advapi32.lib;shell32.lib;Rpcrt4.lib;Mswsock.lib;Crypt32.lib;User32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\imports\release\lib-ARM64;..\..\imports\release\lib-AnyCPU;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(NetFxSdk48Dir)Lib\um\arm;..\..\imports\release\lib-ARM64;..\..\imports\release\lib-AnyCPU;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DelayLoadDLLs>SharpSvn-DB44-20-$(Platform).svnDll;advapi32.dll;crypt32.dll;rpcrt4.dll;secur32.dll;user32.dll;version.dll;ws2_32.dll;shell32.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug>true</AssemblyDebug>
@@ -1260,7 +1261,7 @@ $(SolutionDir)tools\Errors2Enum\bin\Release\Errors2Enum.exe "$(VCInstallDir)." "
     <None Include="SharpSvn.snk" />
     <None Include="SharpSvn.vcproj" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' != 'ReleaseCore' And '$(Configuration)' != 'DebugCore'">
     <ProjectReference Include="..\SharpPlink\SharpPlink.vcxproj">
       <Project>{f47e6f0f-0639-45ae-b029-7edd8cd5910a}</Project>
       <Private>false</Private>
@@ -1271,6 +1272,23 @@ $(SolutionDir)tools\Errors2Enum\bin\Release\Errors2Enum.exe "$(VCInstallDir)." "
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Target Name="UseAnyCpuSatelliteAssembliesForArm64"
+          BeforeTargets="GenerateSatelliteAssemblies"
+          Condition="'$(Platform)' == 'ARM64'">
+    <PropertyGroup>
+      <!-- al.exe does not accept ARM64 as a platform for satellite resource assemblies. -->
+      <_OriginalPlatformTargetForSatelliteAssemblies Condition="'$(_OriginalPlatformTargetForSatelliteAssemblies)' == ''">$(PlatformTarget)</_OriginalPlatformTargetForSatelliteAssemblies>
+      <PlatformTarget>AnyCPU</PlatformTarget>
+    </PropertyGroup>
+  </Target>
+  <Target Name="RestorePlatformTargetAfterSatelliteAssemblies"
+          AfterTargets="GenerateSatelliteAssemblies"
+          Condition="'$(_OriginalPlatformTargetForSatelliteAssemblies)' != ''">
+    <PropertyGroup>
+      <PlatformTarget>$(_OriginalPlatformTargetForSatelliteAssemblies)</PlatformTarget>
+      <_OriginalPlatformTargetForSatelliteAssemblies></_OriginalPlatformTargetForSatelliteAssemblies>
+    </PropertyGroup>
+  </Target>
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.Build.Tasks.Git.1.1.1\build\Microsoft.Build.Tasks.Git.targets" Condition="Exists('..\packages\Microsoft.Build.Tasks.Git.1.1.1\build\Microsoft.Build.Tasks.Git.targets')" />
     <Import Project="..\packages\Microsoft.SourceLink.Common.1.1.1\build\Microsoft.SourceLink.Common.targets" Condition="Exists('..\packages\Microsoft.SourceLink.Common.1.1.1\build\Microsoft.SourceLink.Common.targets')" />

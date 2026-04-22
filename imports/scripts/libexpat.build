@@ -14,7 +14,7 @@
         <prop name="EXPAT_SHARED_LIBS" value="OFF" />
       </CMake>
 
-      <MSBuild src="${libexpatDir}/expat.sln">
+      <MSBuild src="${libexpatDir}/expat.${cmakeSolutionExt}">
         <target value="expat" />
       </MSBuild>
     </OnceBlock>

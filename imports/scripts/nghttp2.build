@@ -24,7 +24,7 @@
           <replacestring from='&gt;libnghttp2-1&lt;/TargetName' to='&gt;${dllPrefix}libnghttp2-1&lt;/TargetName' if="${vcxproj}" />
         </filterchain>
       </FilterFile>
-      <MSBuild src="${nghttp2Dir}/NGHTTP2.sln">
+      <MSBuild src="${nghttp2Dir}/NGHTTP2.${cmakeSolutionExt}">
         <target value="nghttp2" />
       </MSBuild>
     </OnceBlock>

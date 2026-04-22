@@ -53,7 +53,7 @@
         <prop name="OPENSSL_INCLUDE_DIR" value="${release}/include/" />
       </CMake>
     </OnceBlock>
-    <MSBuild src="${libssh2Dir}/libssh2.sln">
+    <MSBuild src="${libssh2Dir}/libssh2.${cmakeSolutionExt}">
         <target value="libssh2_static" if="${static}" />
         <target value="libssh2_shared" unless="${static}" />
       </MSBuild>

@@ -11,7 +11,7 @@
         <prop name="BUILD_SHARED_LIBS" value="ON" />
       </CMake>
 
-      <MSBuild src="${pcreDir}/PCRE.sln">
+      <MSBuild src="${pcreDir}/PCRE.${cmakeSolutionExt}">
         <target value="pcre" />
       </MSBuild>
     </OnceBlock>
