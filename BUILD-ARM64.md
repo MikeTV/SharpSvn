@@ -15,6 +15,17 @@ working ARM64 `.NET 6` build on Windows with Visual Studio 2026.
 The framework DLL was verified after build, and the resulting file is an ARM64
 mixed-mode assembly.
 
+## Consumer Drop
+
+A prebuilt consumer-ready `.NET Framework 4.8.1` ARM64 runtime set is committed
+under:
+
+- `release\win-arm64\net481`
+
+That folder includes a consumer README plus the required runtime files, so
+application developers do not need to compile SharpSvn locally to use the
+ARM64 framework build.
+
 ## Required Installed Components
 
 The following tooling is installed on the machine used to verify the build:
