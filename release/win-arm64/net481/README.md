@@ -7,13 +7,23 @@ Consumers can use these files directly without compiling SharpSvn locally.
 
 ## Required Files
 
-These three files are the required SharpSvn payload:
+These three files are the required SharpSvn core payload:
 
 - `SharpSvn.dll`
 - `SharpSvn-DB44-20-ARM64.svnDll`
 - `SharpPlink-ARM64.svnExe`
 
 All three files should stay together in the application output directory.
+
+## Optional UI Layer
+
+Applications that use the `SharpSvn.UI` helper APIs should also deploy:
+
+- `SharpSvn.UI.dll`
+
+`SharpSvn.UI.dll` is a managed `AnyCPU` assembly and can be placed beside the
+ARM64 SharpSvn runtime files above. It does not need an additional ARM64-
+specific companion binary beyond the core SharpSvn payload.
 
 ## What Each File Does
 
@@ -31,9 +41,12 @@ The following are not required for the basic runtime to start:
 - Localized `SharpSvn.resources.dll` files for non-English UI/resources
 - `SharpSvn.xml` for IntelliSense/documentation
 - `SharpSvn.pdb` for debugging
+- `SharpSvn.UI.xml` for IntelliSense/documentation
+- `SharpSvn.UI.pdb` for debugging
 
-Those files are available from the build output if needed, but they are not
-required for a minimal consumer deployment.
+`SharpSvn.UI.xml` and `SharpSvn.UI.pdb` are included in this folder. The
+remaining optional files are available from the build output if needed, but
+they are not required for a minimal consumer deployment.
 
 ## Runtime Prerequisites
 
@@ -51,6 +64,9 @@ The files in this folder were copied from the verified ARM64 framework build:
 
 - `src\SharpSvn\bin\ARM64\Release\SharpSvn.dll`
 - `src\SharpSvn\bin\ARM64\Release\SharpPlink-ARM64.svnExe`
+- `src\SharpSvn.UI\bin\Release\SharpSvn.UI.dll`
 - `imports\release\bin\SharpSvn-DB44-20-ARM64.svnDll`
 
-The built `SharpSvn.dll` was verified as an ARM64 binary.
+The built `SharpSvn.dll` was verified as an ARM64 binary, and
+`SharpSvn.UI.dll` was verified as an `AnyCPU` framework assembly that can
+consume the ARM64 build.

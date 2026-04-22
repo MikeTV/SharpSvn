@@ -8,6 +8,7 @@ working ARM64 `.NET 6` build on Windows with Visual Studio 2026.
 - Framework build:
   - `src\SharpSvn\bin\ARM64\Release\SharpSvn.dll`
   - `src\SharpSvn\bin\ARM64\Release\SharpPlink-ARM64.svnExe`
+  - `src\SharpSvn.UI\bin\Release\SharpSvn.UI.dll`
 - Core build:
   - `src\SharpSvn\bin\ARM64\ReleaseCore\SharpSvn.dll`
   - `src\SharpSvn\bin\ARM64\ReleaseCore\SharpPlink-ARM64.svnExe`
@@ -22,9 +23,9 @@ under:
 
 - `release\win-arm64\net481`
 
-That folder includes a consumer README plus the required runtime files, so
-application developers do not need to compile SharpSvn locally to use the
-ARM64 framework build.
+That folder includes a consumer README plus the required runtime files and the
+optional `SharpSvn.UI.dll` companion assembly, so application developers do not
+need to compile SharpSvn locally to use the ARM64 framework build.
 
 ## Required Installed Components
 
@@ -55,6 +56,7 @@ The ARM64 bring-up now includes:
 - Visual Studio 2026 support in the native dependency scripts
 - ARM64 CI jobs and ARM64 package assets
 - `SharpSvn.vcxproj` targeting `.NET Framework 4.8.1`
+- `SharpSvn.UI.csproj` targeting `.NET Framework 4.8.1`
 - ARM64 framework linking against `NETFXSDK\4.8.1\Lib\um\arm64`
 - NuGet package metadata updated from `net46` to `net481`
 
